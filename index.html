@@ -35,8 +35,15 @@
             --blue: #3b82f6;
         }
 
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         html {
             scroll-behavior: smooth;
+            width: 100%;
         }
 
         body {
@@ -46,6 +53,9 @@
             min-height: 100vh;
             overflow-x: hidden;
             position: relative;
+            margin: 0;
+            padding: 0;
+            width: 100%;
         }
 
         /* Animated glow effects */
@@ -171,22 +181,33 @@
         /* ===== UTILITIES ===== */
         .container {
             max-width: 1200px;
-            margin: 0 auto;
+            margin-left: auto;
+            margin-right: auto;
             padding: 0 40px;
             position: relative;
             z-index: 1;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .section {
-            padding: 120px 0;
+            padding: 80px 0;
             position: relative;
             z-index: 1;
             background: transparent;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .section > .container {
+            width: 100%;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 64px;
+            margin-bottom: 48px;
+            width: 100%;
         }
 
         .section-badge {
@@ -754,12 +775,14 @@
         /* ===== FEATURES ===== */
         .features {
             background: transparent;
+            width: 100%;
         }
 
         .features-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 24px;
+            width: 100%;
         }
 
         .feature-card {
@@ -767,11 +790,12 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 32px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
 
+        /* Top border glow effect */
         .feature-card::before {
             content: '';
             position: absolute;
@@ -787,7 +811,10 @@
         .feature-card:hover {
             background: var(--bg-card-hover);
             border-color: var(--border-light);
-            transform: translateY(-4px);
+            transform: translateY(-8px);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 30px var(--green-glow);
         }
 
         .feature-card:hover::before {
@@ -803,29 +830,113 @@
             align-items: center;
             justify-content: center;
             margin-bottom: 20px;
+            position: relative;
+            transition: all 0.4s ease;
+        }
+
+        /* Icon glow ring */
+        .feature-icon::before {
+            content: '';
+            position: absolute;
+            top: -3px;
+            left: -3px;
+            right: -3px;
+            bottom: -3px;
+            border-radius: 17px;
+            border: 1px solid transparent;
+            background: linear-gradient(135deg, var(--green), transparent 50%) border-box;
+            -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Floating particles effect */
+        .feature-icon::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, var(--green-glow) 0%, transparent 70%);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.4s ease;
+            z-index: -1;
+            border-radius: 14px;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: var(--green);
+            box-shadow: 0 0 25px var(--green-glow);
+        }
+
+        .feature-card:hover .feature-icon::before {
+            opacity: 1;
+        }
+
+        .feature-card:hover .feature-icon::after {
+            opacity: 1;
+            transform: scale(1.5);
+        }
+
+        .feature-card:hover .feature-icon svg {
+            color: #000;
+            transform: scale(1.1);
         }
 
         .feature-icon svg {
             width: 28px;
             height: 28px;
             color: var(--green);
+            transition: all 0.4s ease;
         }
 
         .feature-title {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 12px;
+            transition: color 0.3s ease;
+        }
+
+        .feature-card:hover .feature-title {
+            color: var(--green);
         }
 
         .feature-description {
             color: var(--text-secondary);
             line-height: 1.6;
             font-size: 0.95rem;
+            transition: color 0.3s ease;
         }
+
+        .feature-card:hover .feature-description {
+            color: var(--text-primary);
+        }
+
+        /* Staggered animation on scroll */
+        .feature-card {
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .feature-card:nth-child(1) { transition-delay: 0s; }
+        .feature-card:nth-child(2) { transition-delay: 0.1s; }
+        .feature-card:nth-child(3) { transition-delay: 0.2s; }
+        .feature-card:nth-child(4) { transition-delay: 0.3s; }
+        .feature-card:nth-child(5) { transition-delay: 0.4s; }
+        .feature-card:nth-child(6) { transition-delay: 0.5s; }
 
         /* ===== HOW IT WORKS ===== */
         .how-it-works {
             background: transparent;
+            width: 100%;
         }
 
         .steps {
@@ -833,6 +944,7 @@
             grid-template-columns: repeat(4, 1fr);
             gap: 32px;
             position: relative;
+            width: 100%;
         }
 
         .steps::before {
@@ -846,10 +958,53 @@
             z-index: 0;
         }
 
+        /* Animated line overlay */
+        .steps::after {
+            content: '';
+            position: absolute;
+            top: 40px;
+            left: 10%;
+            width: 0%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--green), var(--green-light), var(--green));
+            z-index: 0;
+            animation: lineProgress 3s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--green-glow);
+        }
+
+        @keyframes lineProgress {
+            0% {
+                width: 0%;
+                opacity: 1;
+            }
+            80% {
+                width: 80%;
+                opacity: 1;
+            }
+            100% {
+                width: 80%;
+                opacity: 0;
+            }
+        }
+
         .step {
             text-align: center;
             position: relative;
             z-index: 1;
+            transition: transform 0.3s ease;
+        }
+
+        .step:hover {
+            transform: translateY(-8px);
+        }
+
+        .step:hover .step-number {
+            box-shadow: 0 0 50px var(--green-glow), 0 0 80px rgba(0, 255, 135, 0.3);
+            border-color: var(--green-light);
+        }
+
+        .step:hover .step-title {
+            color: var(--green);
         }
 
         .step-number {
@@ -867,12 +1022,87 @@
             color: var(--green);
             margin: 0 auto 24px;
             box-shadow: 0 0 30px var(--green-glow);
+            position: relative;
+            transition: all 0.3s ease;
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Staggered floating animation for each step */
+        .step:nth-child(1) .step-number { animation-delay: 0s; }
+        .step:nth-child(2) .step-number { animation-delay: 0.5s; }
+        .step:nth-child(3) .step-number { animation-delay: 1s; }
+        .step:nth-child(4) .step-number { animation-delay: 1.5s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-8px);
+            }
+        }
+
+        /* Pulse ring effect */
+        .step-number::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border: 1px solid var(--green);
+            border-radius: 50%;
+            opacity: 0;
+            animation: pulseRing 2.5s ease-out infinite;
+        }
+
+        .step:nth-child(1) .step-number::before { animation-delay: 0s; }
+        .step:nth-child(2) .step-number::before { animation-delay: 0.6s; }
+        .step:nth-child(3) .step-number::before { animation-delay: 1.2s; }
+        .step:nth-child(4) .step-number::before { animation-delay: 1.8s; }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1.4);
+                opacity: 0;
+            }
+        }
+
+        /* Glow animation */
+        .step-number::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, var(--green-glow) 0%, transparent 70%);
+            transform: translate(-50%, -50%);
+            opacity: 0.5;
+            animation: glowPulse 3s ease-in-out infinite;
+            z-index: -1;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% {
+                opacity: 0.3;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: translate(-50%, -50%) scale(1.2);
+            }
         }
 
         .step-title {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 12px;
+            transition: color 0.3s ease;
         }
 
         .step-description {
@@ -881,8 +1111,17 @@
             line-height: 1.6;
         }
 
-        .section {
-            padding: 100px 0;
+        /* Scroll Reveal Animation */
+        .step-animate {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+            transition-delay: calc(var(--delay) * 0.15s);
+        }
+
+        .step-animate.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .section-badge {
@@ -914,6 +1153,7 @@
         /* ===== METRICS SHOWCASE - ALIGNED ===== */
         .metrics-showcase {
             background: transparent;
+            width: 100%;
         }
 
         .metrics-header {
@@ -926,12 +1166,14 @@
             grid-template-columns: 1fr 1fr;
             gap: 60px;
             align-items: start;
+            width: 100%;
         }
 
         .metrics-list {
             display: flex;
             flex-direction: column;
             gap: 20px;
+            width: 100%;
         }
 
         .metric-item {
@@ -941,12 +1183,52 @@
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        /* Left border accent */
+        .metric-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: var(--green);
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+
+        /* Background glow effect */
+        .metric-item::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at left center, var(--green-glow) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
         }
 
         .metric-item:hover {
             border-color: var(--green);
             background: var(--bg-card-hover);
+            transform: translateX(8px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2), -5px 0 20px var(--green-glow);
+        }
+
+        .metric-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .metric-item:hover::after {
+            opacity: 0.5;
         }
 
         .metric-item-icon {
@@ -958,18 +1240,75 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            position: relative;
+            z-index: 1;
+            transition: all 0.4s ease;
+        }
+
+        /* Icon pulse ring */
+        .metric-item-icon::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            border-radius: 16px;
+            border: 2px solid var(--green);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+
+        .metric-item:hover .metric-item-icon {
+            background: var(--green);
+            transform: scale(1.1) rotate(-5deg);
+            box-shadow: 0 0 20px var(--green-glow);
+        }
+
+        .metric-item:hover .metric-item-icon::before {
+            opacity: 0.5;
+            transform: scale(1.2);
+            animation: iconPulse 1.5s ease-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0% {
+                transform: scale(1);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.5);
+                opacity: 0;
+            }
         }
 
         .metric-item-icon svg {
             width: 24px;
             height: 24px;
             color: var(--green);
+            transition: all 0.3s ease;
+        }
+
+        .metric-item:hover .metric-item-icon svg {
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .metric-item-content {
+            position: relative;
+            z-index: 1;
         }
 
         .metric-item-content h4 {
             font-size: 1.1rem;
             font-weight: 600;
             margin-bottom: 6px;
+            transition: color 0.3s ease;
+        }
+
+        .metric-item:hover .metric-item-content h4 {
+            color: var(--green);
         }
 
         .metric-item-content p {
@@ -977,7 +1316,27 @@
             font-size: 0.9rem;
             line-height: 1.5;
             margin: 0;
+            transition: color 0.3s ease;
         }
+
+        .metric-item:hover .metric-item-content p {
+            color: var(--text-primary);
+        }
+
+        /* Staggered animation for metric items */
+        .metric-item {
+            opacity: 0;
+            transform: translateX(-30px);
+        }
+
+        .metric-item.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .metric-item:nth-child(1) { transition-delay: 0s; }
+        .metric-item:nth-child(2) { transition-delay: 0.15s; }
+        .metric-item:nth-child(3) { transition-delay: 0.3s; }
 
         /* ALIGNED VISUAL - Removed negative margin */
         .metrics-visual {
@@ -990,6 +1349,50 @@
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 32px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        /* Animated border gradient */
+        .metrics-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--green), var(--green-light), var(--green));
+            background-size: 200% 100%;
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0%, 100% {
+                background-position: 0% 50%;
+            }
+            50% {
+                background-position: 100% 50%;
+            }
+        }
+
+        /* Corner accent */
+        .metrics-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at top right, var(--green-glow) 0%, transparent 70%);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .metrics-card:hover {
+            border-color: var(--border-light);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3), 0 0 30px var(--green-glow);
+            transform: translateY(-5px);
         }
 
         .metrics-card-header {
@@ -997,6 +1400,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
         }
 
         .metrics-card-title {
@@ -1010,12 +1415,20 @@
             background: rgba(255, 255, 255, 0.05);
             padding: 6px 12px;
             border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .metrics-card:hover .metrics-card-period {
+            background: var(--green-subtle);
+            color: var(--green);
         }
 
         .metrics-breakdown {
             display: flex;
             flex-direction: column;
             gap: 0;
+            position: relative;
+            z-index: 1;
         }
 
         .breakdown-row {
@@ -1024,6 +1437,17 @@
             align-items: center;
             padding: 16px 0;
             border-bottom: 1px solid var(--border);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .breakdown-row:hover {
+            background: rgba(255, 255, 255, 0.02);
+            padding-left: 10px;
+            padding-right: 10px;
+            margin-left: -10px;
+            margin-right: -10px;
+            border-radius: 8px;
         }
 
         .breakdown-row:last-child {
@@ -1033,27 +1457,56 @@
             border-top: 2px solid var(--green);
         }
 
+        .breakdown-row:last-child:hover {
+            background: var(--green-subtle);
+        }
+
         .breakdown-label {
             display: flex;
             align-items: center;
             gap: 12px;
             color: var(--text-secondary);
             font-size: 0.95rem;
+            transition: color 0.3s ease;
+        }
+
+        .breakdown-row:hover .breakdown-label {
+            color: var(--text-primary);
         }
 
         .breakdown-label svg {
             opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .breakdown-row:hover .breakdown-label svg {
+            opacity: 1;
+            transform: scale(1.2);
         }
 
         .breakdown-value {
             font-family: 'JetBrains Mono', monospace;
             font-weight: 600;
             font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .breakdown-row:hover .breakdown-value {
+            transform: scale(1.05);
         }
 
         .breakdown-value.negative { color: var(--red); }
         .breakdown-value.positive { color: var(--green); }
         .breakdown-value.neutral { color: var(--text-primary); }
+
+        /* Counting animation for values */
+        .breakdown-value {
+            position: relative;
+        }
+
+        .breakdown-row:last-child .breakdown-value {
+            text-shadow: 0 0 20px var(--green-glow);
+        }
 
         /* Responsive */
         @media (max-width: 968px) {
@@ -1079,16 +1532,17 @@
 
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
             align-items: start;
+            width: 100%;
         }
 
         .pricing-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 40px 32px;
+            padding: 32px 24px;
             position: relative;
             transition: all 0.3s ease;
         }
@@ -1119,23 +1573,23 @@
         }
 
         .pricing-name {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             font-weight: 600;
             margin-bottom: 8px;
         }
 
         .pricing-description {
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 0.875rem;
             margin-bottom: 24px;
         }
 
         .pricing-price {
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .pricing-amount {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 700;
             font-family: 'JetBrains Mono', monospace;
         }
@@ -1152,21 +1606,21 @@
 
         .pricing-features {
             list-style: none;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .pricing-features li {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 0;
+            gap: 10px;
+            padding: 10px 0;
             color: var(--text-secondary);
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
         .pricing-features li svg {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             color: var(--green);
             flex-shrink: 0;
         }
@@ -1193,68 +1647,205 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 24px;
+            width: 100%;
         }
 
         .testimonial-card {
             background: var(--bg-card);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: 20px;
             padding: 32px;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Quote icon */
+        .testimonial-card::before {
+            content: '"';
+            position: absolute;
+            top: 24px;
+            right: 28px;
+            font-size: 5rem;
+            font-family: Georgia, serif;
+            color: var(--green);
+            opacity: 0.15;
+            line-height: 1;
+            pointer-events: none;
         }
 
         .testimonial-card:hover {
-            border-color: var(--border-light);
-            transform: translateY(-4px);
+            border-color: var(--green);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2), 0 0 30px var(--green-glow);
+        }
+
+        .testimonial-card:hover::before {
+            opacity: 0.3;
+        }
+
+        .testimonial-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .testimonial-rating {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .testimonial-stars {
             display: flex;
-            gap: 4px;
-            margin-bottom: 20px;
+            gap: 3px;
         }
 
         .testimonial-stars svg {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             color: var(--yellow);
             fill: var(--yellow);
         }
 
+        .testimonial-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: var(--green-subtle);
+            color: var(--green);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .testimonial-badge svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        .testimonial-metric {
+            background: linear-gradient(135deg, var(--green-subtle), rgba(0, 255, 135, 0.05));
+            border: 1px solid rgba(0, 255, 135, 0.2);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .testimonial-metric-value {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--green);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .testimonial-metric-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .testimonial-text {
             color: var(--text-secondary);
-            line-height: 1.7;
+            line-height: 1.8;
             margin-bottom: 24px;
             font-size: 0.95rem;
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-text strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .testimonial-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--border), transparent);
+            margin-bottom: 20px;
         }
 
         .testimonial-author {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 14px;
         }
 
         .testimonial-avatar {
-            width: 48px;
-            height: 48px;
+            width: 52px;
+            height: 52px;
             background: linear-gradient(135deg, var(--green), var(--green-dark));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            color: #000;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        /* Online indicator */
+        .testimonial-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            background: var(--green);
+            border: 2px solid var(--bg-card);
+            border-radius: 50%;
+        }
+
+        .testimonial-info {
+            flex-grow: 1;
         }
 
         .testimonial-info h4 {
             font-size: 1rem;
             font-weight: 600;
-            margin-bottom: 4px;
+            margin-bottom: 2px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .testimonial-info h4 svg {
+            width: 16px;
+            height: 16px;
+            color: var(--blue);
         }
 
         .testimonial-info p {
             color: var(--text-muted);
-            font-size: 0.85rem;
+            font-size: 0.8rem;
+            margin-bottom: 4px;
+        }
+
+        .testimonial-info .testimonial-location {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .testimonial-info .testimonial-location svg {
+            width: 12px;
+            height: 12px;
+            opacity: 0.7;
         }
 
         /* ===== FAQ ===== */
@@ -1454,8 +2045,22 @@
             height: 20px;
         }
 
-        /* ===== RESPONSIVE ===== */
+        /* ===== RESPONSIVE - TABLET ===== */
+        @media (max-width: 1200px) {
+            .pricing-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 700px;
+                margin: 0 auto;
+                gap: 20px;
+            }
+        }
+
         @media (max-width: 1024px) {
+            /* Reduce glow effects on tablet */
+            .glow {
+                opacity: 0.5;
+            }
+
             .container {
                 padding: 0 24px;
             }
@@ -1500,12 +2105,6 @@
                 display: none;
             }
 
-            .pricing-grid {
-                grid-template-columns: 1fr;
-                max-width: 400px;
-                margin: 0 auto;
-            }
-
             .testimonials-grid {
                 grid-template-columns: 1fr;
             }
@@ -1520,9 +2119,32 @@
             }
         }
 
+        /* ===== RESPONSIVE - MOBILE ===== */
         @media (max-width: 768px) {
+            /* Disable heavy glow effects on mobile for better performance */
+            .glow {
+                display: none;
+            }
+
+            /* Reduce box shadows on mobile */
+            .dashboard-preview {
+                box-shadow: 
+                    0 0 0 1px rgba(255, 255, 255, 0.05),
+                    0 10px 20px rgba(0, 0, 0, 0.3);
+            }
+
+            .pricing-card.featured {
+                box-shadow: 0 0 30px var(--green-glow);
+            }
+
+            /* Navbar Mobile */
             .navbar {
-                padding: 0 20px;
+                padding: 0 16px;
+                height: 64px;
+            }
+
+            .nav-logo img {
+                height: 26px;
             }
 
             .nav-links, .nav-actions {
@@ -1533,70 +2155,706 @@
                 display: flex;
             }
 
+            /* Mobile Menu */
+            .mobile-menu {
+                top: 64px;
+                padding: 16px;
+            }
+
+            .mobile-menu a {
+                padding: 14px 0;
+                font-size: 1.1rem;
+            }
+
+            /* Hero Mobile */
             .hero {
-                padding: 100px 20px 60px;
+                min-height: auto;
+                padding: 90px 16px 60px;
+            }
+
+            .hero-content {
+                gap: 40px;
+            }
+
+            .hero-badge {
+                font-size: 0.75rem;
+                padding: 6px 12px;
             }
 
             .hero-title {
+                font-size: 2rem;
                 letter-spacing: -1px;
+                line-height: 1.15;
             }
 
+            .hero-subtitle {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 32px;
+            }
+
+            .hero-cta {
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 32px;
+            }
+
+            .hero-cta .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .hero-stats {
+                flex-wrap: wrap;
+                gap: 16px;
+                justify-content: center;
+            }
+
+            .hero-stat {
+                flex: 0 0 45%;
+                text-align: center;
+            }
+
+            .hero-stat-value {
+                font-size: 1.2rem;
+            }
+
+            .hero-stat-label {
+                font-size: 0.75rem;
+            }
+
+            /* Dashboard Preview Mobile */
+            .hero-visual {
+                max-width: 100%;
+            }
+
+            .dashboard-preview {
+                border-radius: 12px;
+            }
+
+            .dashboard-header {
+                padding: 12px 16px;
+            }
+
+            .dashboard-dot {
+                width: 10px;
+                height: 10px;
+            }
+
+            .dashboard-content {
+                padding: 16px;
+            }
+
+            .dashboard-metric {
+                padding: 16px;
+                margin-bottom: 12px;
+            }
+
+            .dashboard-metric-label {
+                font-size: 0.7rem;
+            }
+
+            .dashboard-metric-value {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-metric-sub {
+                font-size: 0.75rem;
+            }
+
+            .dashboard-metrics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 8px;
+            }
+
+            .dashboard-mini-metric {
+                padding: 12px;
+            }
+
+            .dashboard-mini-metric-label {
+                font-size: 0.65rem;
+            }
+
+            .dashboard-mini-metric-value {
+                font-size: 0.95rem;
+            }
+
+            .float-card {
+                display: none;
+            }
+
+            /* Brands Carousel Mobile */
+            .brands {
+                padding: 20px 0 60px;
+            }
+
+            .brands-grid {
+                gap: 40px;
+                padding: 0 20px;
+            }
+
+            .brand-item {
+                font-size: 0.9rem;
+                gap: 8px;
+            }
+
+            .brand-item svg {
+                width: 22px;
+                height: 22px;
+            }
+
+            /* Sections Mobile */
             .section {
-                padding: 80px 0;
+                padding: 50px 0;
             }
 
+            .section-header {
+                margin-bottom: 32px;
+            }
+
+            .section-badge {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+                margin-bottom: 16px;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+                letter-spacing: -0.5px;
+                margin-bottom: 12px;
+            }
+
+            .section-subtitle {
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+            /* Features Mobile */
             .features-grid {
                 grid-template-columns: 1fr;
+                gap: 16px;
             }
 
+            .feature-card {
+                padding: 24px;
+                border-radius: 12px;
+                opacity: 1;
+                transform: none;
+            }
+
+            .feature-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .feature-card:hover .feature-icon {
+                transform: none;
+            }
+
+            .feature-icon {
+                width: 48px;
+                height: 48px;
+                border-radius: 12px;
+                margin-bottom: 16px;
+            }
+
+            .feature-icon::before,
+            .feature-icon::after {
+                display: none; /* Disable glow effects on mobile */
+            }
+
+            .feature-icon svg {
+                width: 24px;
+                height: 24px;
+            }
+
+            .feature-title {
+                font-size: 1.1rem;
+                margin-bottom: 8px;
+            }
+
+            .feature-description {
+                font-size: 0.9rem;
+            }
+
+            /* Steps Mobile */
             .steps {
                 grid-template-columns: 1fr;
+                gap: 32px;
+            }
+
+            .steps::after {
+                display: none; /* Hide animated line on mobile */
+            }
+
+            .step-number {
+                width: 64px;
+                height: 64px;
+                font-size: 1.25rem;
+                margin-bottom: 16px;
+                animation: none; /* Disable float animation */
+            }
+
+            .step-number::before,
+            .step-number::after {
+                display: none; /* Disable pulse effects on mobile */
+            }
+
+            .step:hover {
+                transform: none; /* Disable hover transform on mobile */
+            }
+
+            .step-animate {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+
+            .step-title {
+                font-size: 1rem;
+                margin-bottom: 8px;
+            }
+
+            .step-description {
+                font-size: 0.85rem;
+            }
+
+            /* Metrics Mobile */
+            .metrics-showcase .container {
+                padding: 0 16px;
+            }
+
+            .metrics-header {
+                margin-bottom: 32px;
+            }
+
+            .metrics-header .section-title {
+                font-size: 1.5rem;
+            }
+
+            .metrics-header .section-subtitle {
+                font-size: 0.9rem;
             }
 
             .metrics-content {
                 grid-template-columns: 1fr;
-                gap: 48px;
+                gap: 32px;
+            }
+
+            .metrics-list {
+                gap: 12px;
+            }
+
+            .metric-item {
+                padding: 16px;
+                gap: 14px;
+                border-radius: 10px;
+                opacity: 1;
+                transform: none;
+            }
+
+            .metric-item::before,
+            .metric-item::after {
+                display: none; /* Disable glow effects on mobile */
+            }
+
+            .metric-item:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .metric-item-icon {
+                width: 40px;
+                height: 40px;
+                border-radius: 10px;
+            }
+
+            .metric-item-icon::before {
+                display: none; /* Disable pulse ring on mobile */
+            }
+
+            .metric-item:hover .metric-item-icon {
+                transform: none;
+            }
+
+            .metric-item-icon svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            .metric-item-content h4 {
+                font-size: 1rem;
+                margin-bottom: 4px;
+            }
+
+            .metric-item-content p {
+                font-size: 0.85rem;
+            }
+
+            .metrics-visual {
+                position: relative;
+                top: 0;
+            }
+
+            .metrics-card {
+                padding: 20px;
+                border-radius: 12px;
+            }
+
+            .metrics-card:hover {
+                transform: none;
+                box-shadow: none;
+            }
+
+            .breakdown-row:hover {
+                background: none;
+                padding-left: 0;
+                padding-right: 0;
+                margin-left: 0;
+                margin-right: 0;
+            }
+
+            .metrics-card-header {
+                margin-bottom: 16px;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+
+            .metrics-card-title {
+                font-size: 0.95rem;
+            }
+
+            .metrics-card-period {
+                font-size: 0.75rem;
+            }
+
+            .breakdown-row {
+                padding: 12px 0;
+            }
+
+            .breakdown-label {
+                font-size: 0.85rem;
+                gap: 8px;
+            }
+
+            .breakdown-label svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .breakdown-value {
+                font-size: 0.9rem;
+            }
+
+            .breakdown-row:last-child .breakdown-value {
+                font-size: 1.1rem;
+            }
+
+            /* Pricing Mobile */
+            .pricing-grid {
+                grid-template-columns: 1fr;
+                max-width: 100%;
+                gap: 16px;
+            }
+
+            .pricing-card {
+                padding: 28px 24px;
+                border-radius: 16px;
+            }
+
+            .pricing-card.featured::before {
+                font-size: 0.7rem;
+                padding: 5px 12px;
+                top: -10px;
+            }
+
+            .pricing-name {
+                font-size: 1.1rem;
+            }
+
+            .pricing-description {
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+            }
+
+            .pricing-price {
+                margin-bottom: 24px;
+            }
+
+            .pricing-amount {
+                font-size: 2.5rem;
+            }
+
+            .pricing-amount .currency {
+                font-size: 1.25rem;
+            }
+
+            .pricing-period {
+                font-size: 0.85rem;
+            }
+
+            .pricing-features {
+                margin-bottom: 24px;
+            }
+
+            .pricing-features li {
+                padding: 10px 0;
+                font-size: 0.9rem;
+                gap: 10px;
+            }
+
+            .pricing-features li svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Testimonials Mobile */
+            .testimonials-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .testimonial-card {
+                padding: 24px;
+                border-radius: 16px;
+            }
+
+            .testimonial-card::before {
+                font-size: 3.5rem;
+                top: 16px;
+                right: 20px;
+            }
+
+            .testimonial-header {
+                margin-bottom: 16px;
+            }
+
+            .testimonial-metric {
+                padding: 14px;
+                margin-bottom: 16px;
+            }
+
+            .testimonial-metric-value {
+                font-size: 1.25rem;
+            }
+
+            .testimonial-metric-label {
+                font-size: 0.7rem;
+            }
+
+            .testimonial-stars svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .testimonial-badge {
+                font-size: 0.65rem;
+                padding: 3px 8px;
+            }
+
+            .testimonial-text {
+                font-size: 0.9rem;
+                margin-bottom: 20px;
+                line-height: 1.7;
+            }
+
+            .testimonial-author {
+                gap: 12px;
+            }
+
+            .testimonial-avatar {
+                width: 46px;
+                height: 46px;
+                font-size: 0.9rem;
+            }
+
+            .testimonial-avatar::after {
+                width: 10px;
+                height: 10px;
+            }
+
+            .testimonial-info h4 {
+                font-size: 0.95rem;
+            }
+
+            .testimonial-info h4 svg {
+                width: 14px;
+                height: 14px;
+            }
+
+            .testimonial-info p {
+                font-size: 0.75rem;
+            }
+
+            .testimonial-info .testimonial-location {
+                font-size: 0.7rem;
+            }
+
+            /* FAQ Mobile */
+            .faq-grid {
+                max-width: 100%;
+            }
+
+            .faq-item {
+                margin-bottom: 12px;
+                border-radius: 10px;
+            }
+
+            .faq-question {
+                padding: 18px 16px;
+                font-size: 0.95rem;
+                gap: 12px;
+            }
+
+            .faq-question svg {
+                width: 20px;
+                height: 20px;
+                flex-shrink: 0;
+            }
+
+            .faq-answer-content {
+                padding: 0 16px 18px;
+                font-size: 0.9rem;
+                line-height: 1.6;
+            }
+
+            /* Final CTA Mobile */
+            .final-cta-content {
+                max-width: 100%;
+            }
+
+            .final-cta-title {
+                font-size: 1.75rem;
+                margin-bottom: 16px;
+            }
+
+            .final-cta-subtitle {
+                font-size: 0.95rem;
+                margin-bottom: 32px;
             }
 
             .final-cta-buttons {
                 flex-direction: column;
+                gap: 12px;
+            }
+
+            .final-cta-buttons .btn {
+                width: 100%;
+            }
+
+            /* Footer Mobile */
+            .footer {
+                padding: 50px 0 30px;
+                margin-top: 40px;
+            }
+
+            .footer-container {
+                padding: 0 16px;
             }
 
             .footer-grid {
                 grid-template-columns: 1fr;
+                gap: 32px;
+                margin-bottom: 40px;
             }
 
-            .footer-container {
-                padding: 0 20px;
+            .footer-brand img {
+                height: 28px;
+                margin-bottom: 16px;
+            }
+
+            .footer-brand p {
+                font-size: 0.85rem;
+                max-width: 100%;
+            }
+
+            .footer-column h4 {
+                font-size: 0.85rem;
+                margin-bottom: 16px;
+            }
+
+            .footer-column li {
+                margin-bottom: 10px;
+            }
+
+            .footer-column a {
+                font-size: 0.85rem;
             }
 
             .footer-bottom {
                 flex-direction: column;
                 gap: 20px;
                 text-align: center;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .hero-cta {
-                flex-direction: column;
+                padding-top: 30px;
             }
 
-            .hero-stats {
-                flex-wrap: wrap;
-                gap: 24px;
+            .footer-copyright {
+                font-size: 0.8rem;
             }
 
-            .hero-stat {
-                flex: 1 1 40%;
+            .footer-socials {
+                gap: 12px;
+            }
+
+            .footer-socials a {
+                width: 36px;
+                height: 36px;
+                border-radius: 8px;
+            }
+
+            .footer-socials svg {
+                width: 18px;
+                height: 18px;
+            }
+
+            /* Buttons Mobile */
+            .btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
             }
 
             .btn-large {
-                width: 100%;
+                padding: 14px 24px;
+                font-size: 0.95rem;
             }
 
-            .float-card {
-                display: none;
+            /* Container Mobile */
+            .container {
+                padding: 0 16px;
+            }
+        }
+
+        /* ===== RESPONSIVE - SMALL MOBILE ===== */
+        @media (max-width: 380px) {
+            .hero-title {
+                font-size: 1.75rem;
+            }
+
+            .hero-stat {
+                flex: 0 0 100%;
+            }
+
+            .dashboard-metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .pricing-amount {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.5rem;
+            }
+
+            .final-cta-title {
+                font-size: 1.5rem;
+            }
+
+            .step-number {
+                width: 56px;
+                height: 56px;
+                font-size: 1.1rem;
             }
         }
     </style>
@@ -1657,8 +2915,8 @@
                 </h1>
 
                 <p class="hero-subtitle">
-                    Dashboard completo para lojas <strong>COD (Cash on Delivery)</strong> — 
-                    o modelo onde o cliente paga na entrega. Integre Shopify + Facebook Ads 
+                    Dashboard completo para lojas de <strong>e-commerce COD (Cash on Delivery)</strong>,
+                    o modelo de e-commerce onde o cliente paga na entrega. Integre Shopify + Facebook Ads 
                     e veja métricas reais com custos de envio, retorno, pick & pack e taxas 
                     de COD calculados automaticamente.
                 </p>
@@ -1831,7 +3089,7 @@
                 <div class="section-badge">Funcionalidades</div>
                 <h2 class="section-title">Tudo que você precisa para <span class="highlight">escalar</span></h2>
                 <p class="section-subtitle">
-                    Desenvolvido por quem opera COD. No modelo Cash on Delivery, calcular lucro é complexo: 
+                    Desenvolvido por quem opera e-commerce COD. No modelo Cash on Delivery de e-commerce, calcular lucro é complexo: 
                     tem retorno, recusa, taxas de cobrança... Cada feature foi pensada para resolver isso.
                 </p>
             </div>
@@ -1933,7 +3191,7 @@
             </div>
 
             <div class="steps">
-                <div class="step">
+                <div class="step step-animate" style="--delay: 0;">
                     <div class="step-number">01</div>
                     <h3 class="step-title">Crie sua conta</h3>
                     <p class="step-description">
@@ -1942,7 +3200,7 @@
                     </p>
                 </div>
 
-                <div class="step">
+                <div class="step step-animate" style="--delay: 1;">
                     <div class="step-number">02</div>
                     <h3 class="step-title">Conecte sua loja</h3>
                     <p class="step-description">
@@ -1951,7 +3209,7 @@
                     </p>
                 </div>
 
-                <div class="step">
+                <div class="step step-animate" style="--delay: 2;">
                     <div class="step-number">03</div>
                     <h3 class="step-title">Configure custos</h3>
                     <p class="step-description">
@@ -1960,7 +3218,7 @@
                     </p>
                 </div>
 
-                <div class="step">
+                <div class="step step-animate" style="--delay: 3;">
                     <div class="step-number">04</div>
                     <h3 class="step-title">Veja seu lucro</h3>
                     <p class="step-description">
@@ -2120,7 +3378,7 @@
                     <h3 class="pricing-name">Starter</h3>
                     <p class="pricing-description">Para quem está começando</p>
                     <div class="pricing-price">
-                        <span class="pricing-amount"><span class="currency">€</span>0</span>
+                        <span class="pricing-amount"><span class="currency">R$</span>0</span>
                         <span class="pricing-period">/ mês</span>
                     </div>
                     <ul class="pricing-features">
@@ -2170,7 +3428,7 @@
                     <h3 class="pricing-name">Pro</h3>
                     <p class="pricing-description">Para operações em escala</p>
                     <div class="pricing-price">
-                        <span class="pricing-amount"><span class="currency">€</span>49</span>
+                        <span class="pricing-amount"><span class="currency">R$</span>0</span>
                         <span class="pricing-period">/ mês</span>
                     </div>
                     <ul class="pricing-features">
@@ -2215,10 +3473,58 @@
                 </div>
 
                 <div class="pricing-card">
+                    <h3 class="pricing-name">Ultimate</h3>
+                    <p class="pricing-description">Para operações avançadas</p>
+                    <div class="pricing-price">
+                        <span class="pricing-amount"><span class="currency">R$</span>0</span>
+                        <span class="pricing-period">/ mês</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            10 lojas conectadas
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Pedidos ilimitados
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Dashboard completo
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Sync em tempo real
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Facebook + Google Ads
+                        </li>
+                        <li>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            Suporte prioritário
+                        </li>
+                    </ul>
+                    <a href="https://app.cod-profit.com/register.html" class="btn btn-secondary pricing-cta">Assinar Ultimate</a>
+                </div>
+
+                <div class="pricing-card">
                     <h3 class="pricing-name">Enterprise</h3>
                     <p class="pricing-description">Para grandes operações</p>
                     <div class="pricing-price">
-                        <span class="pricing-amount"><span class="currency">€</span>149</span>
+                        <span class="pricing-amount"><span class="currency">R$</span>0</span>
                         <span class="pricing-period">/ mês</span>
                     </div>
                     <ul class="pricing-features">
@@ -2272,70 +3578,151 @@
                 <div class="section-badge">Depoimentos</div>
                 <h2 class="section-title">Quem usa, <span class="highlight">recomenda</span></h2>
                 <p class="section-subtitle">
-                    Veja o que outros operadores de COD estão falando sobre o CodProfit.
+                    Veja o que operadores de e-commerce COD estão falando sobre o CodProfit.
                 </p>
             </div>
 
             <div class="testimonials-grid">
                 <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <div class="testimonial-header">
+                        <div class="testimonial-rating">
+                            <div class="testimonial-stars">
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                            <div class="testimonial-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                Cliente verificado
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-metric">
+                        <span class="testimonial-metric-value">+23%</span>
+                        <span class="testimonial-metric-label">Aumento na margem líquida</span>
                     </div>
                     <p class="testimonial-text">
-                        "Antes eu calculava tudo em planilha e sempre tinha surpresa no final do mês. 
-                        Com o CodProfit eu sei exatamente quanto estou lucrando em cada pedido."
+                        "Eu estava perdendo dinheiro sem saber. A planilha não calculava direito o <strong>custo de retorno</strong> e a <strong>taxa COD</strong>. Quando conectei no CodProfit, descobri que minha margem real era 12% menor do que eu achava. Ajustei os preços e agora finalmente tenho lucro de verdade."
                     </p>
+                    <div class="testimonial-divider"></div>
                     <div class="testimonial-author">
                         <div class="testimonial-avatar">MR</div>
                         <div class="testimonial-info">
-                            <h4>Marco R.</h4>
-                            <p>6 lojas COD na Europa</p>
+                            <h4>
+                                Marco Rossi
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </h4>
+                            <p>6 lojas Shopify • €85k/mês em vendas</p>
+                            <div class="testimonial-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                Itália & Romênia
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <div class="testimonial-header">
+                        <div class="testimonial-rating">
+                            <div class="testimonial-stars">
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                            <div class="testimonial-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                Cliente verificado
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-metric">
+                        <span class="testimonial-metric-value">€4.2 → €2.8</span>
+                        <span class="testimonial-metric-label">CPA por entregue (redução)</span>
                     </div>
                     <p class="testimonial-text">
-                        "A integração com Facebook Ads mudou meu jogo. Agora sei o CPA real por pedido 
-                        entregue e consigo otimizar minhas campanhas de verdade."
+                        "A integração com <strong>Facebook Ads</strong> mudou completamente minha operação. Antes eu olhava CPA por checkout — agora vejo <strong>CPA por pedido entregue</strong>. Cortei campanhas que pareciam boas mas na verdade davam prejuízo. Em 2 semanas recuperei o investimento do ano inteiro."
                     </p>
+                    <div class="testimonial-divider"></div>
                     <div class="testimonial-author">
                         <div class="testimonial-avatar">LS</div>
                         <div class="testimonial-info">
-                            <h4>Lucas S.</h4>
-                            <p>COD Itália e Espanha</p>
+                            <h4>
+                                Lucas Silva
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </h4>
+                            <p>4 lojas Shopify • €120k/mês em vendas</p>
+                            <div class="testimonial-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                Espanha & Portugal
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <div class="testimonial-card">
-                    <div class="testimonial-stars">
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-                        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                    <div class="testimonial-header">
+                        <div class="testimonial-rating">
+                            <div class="testimonial-stars">
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                            </div>
+                            <div class="testimonial-badge">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                    <polyline points="22 4 12 14.01 9 11.01"/>
+                                </svg>
+                                Cliente verificado
+                            </div>
+                        </div>
+                    </div>
+                    <div class="testimonial-metric">
+                        <span class="testimonial-metric-value">4h → 10min</span>
+                        <span class="testimonial-metric-label">Tempo economizado por semana</span>
                     </div>
                     <p class="testimonial-text">
-                        "O sync em 30 segundos é absurdo. Outros dashboards demoravam 10 minutos 
-                        para atualizar. Aqui é instantâneo."
+                        "Eu perdia <strong>4 horas toda semana</strong> atualizando planilhas. Agora é tudo automático. O sync de 30 segundos é real — testei com outras ferramentas que demoravam 15+ minutos. Consigo tomar decisões em tempo real, não baseado em dados de ontem."
                     </p>
+                    <div class="testimonial-divider"></div>
                     <div class="testimonial-author">
                         <div class="testimonial-avatar">AF</div>
                         <div class="testimonial-info">
-                            <h4>Ana F.</h4>
-                            <p>3 lojas COD Portugal</p>
+                            <h4>
+                                Ana Ferreira
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </h4>
+                            <p>3 lojas Shopify • €45k/mês em vendas</p>
+                            <div class="testimonial-location">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+                                    <circle cx="12" cy="10" r="3"/>
+                                </svg>
+                                Portugal
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2357,7 +3744,7 @@
             <div class="faq-grid">
                 <div class="faq-item">
                     <div class="faq-question">
-                        O que é COD (Cash on Delivery)?
+                        O que é COD (Cash on Delivery) no e-commerce?
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"/>
                         </svg>
@@ -2365,28 +3752,28 @@
                     <div class="faq-answer">
                         <div class="faq-answer-content">
                             <strong>COD (Cash on Delivery)</strong> é um modelo de e-commerce onde o cliente paga apenas 
-                            quando recebe o produto em casa — diferente do modelo tradicional onde o pagamento é feito 
-                            no checkout. É muito popular na Europa (Itália, Espanha, Polônia, Romênia) e Oriente Médio. 
+                            quando recebe o produto em casa — diferente do modelo tradicional de e-commerce onde o pagamento é feito 
+                            no checkout online. É muito popular na Europa (Itália, Espanha, Polônia, Romênia) e Oriente Médio. 
                             O desafio é que muitos clientes recusam na entrega, gerando custos de retorno e tornando 
-                            o cálculo de lucro muito mais complexo do que em lojas convencionais.
+                            o cálculo de lucro muito mais complexo do que em lojas de e-commerce convencionais.
                         </div>
                     </div>
                 </div>
 
                 <div class="faq-item">
                     <div class="faq-question">
-                        Por que COD precisa de um dashboard específico?
+                        Por que e-commerce COD precisa de um dashboard específico?
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <polyline points="6 9 12 15 18 9"/>
                         </svg>
                     </div>
                     <div class="faq-answer">
                         <div class="faq-answer-content">
-                            Em lojas normais, cada venda = dinheiro no bolso. Em COD, você tem: pedidos pendentes 
+                            Em lojas de e-commerce normais, cada venda = dinheiro no bolso. Em e-commerce COD, você tem: pedidos pendentes 
                             (ainda não entregues), pedidos entregues (lucro real), e pedidos recusados (prejuízo). 
-                            Além disso, há custos únicos do modelo: taxa de cobrança na entrega, custo de retorno 
+                            Além disso, há custos únicos do modelo de e-commerce COD: taxa de cobrança na entrega, custo de retorno 
                             quando recusam, e o custo de envio que você paga mesmo quando o cliente não aceita. 
-                            Dashboards convencionais não calculam isso corretamente.
+                            Dashboards de e-commerce convencionais não calculam isso corretamente.
                         </div>
                     </div>
                 </div>
@@ -2672,7 +4059,49 @@
             });
         }, observerOptions);
 
-        document.querySelectorAll('.feature-card, .step, .pricing-card, .testimonial-card, .metric-item').forEach(el => {
+        // Separate observer for step-animate elements
+        const stepObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    stepObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.step-animate').forEach(el => {
+            stepObserver.observe(el);
+        });
+
+        // Feature cards with staggered animation
+        const featureObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    featureObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.15 });
+
+        document.querySelectorAll('.feature-card').forEach(el => {
+            featureObserver.observe(el);
+        });
+
+        // Metric items with staggered animation
+        const metricObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    metricObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.2 });
+
+        document.querySelectorAll('.metric-item').forEach(el => {
+            metricObserver.observe(el);
+        });
+
+        document.querySelectorAll('.pricing-card, .testimonial-card').forEach(el => {
             el.style.opacity = '0';
             el.style.transform = 'translateY(30px)';
             el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
